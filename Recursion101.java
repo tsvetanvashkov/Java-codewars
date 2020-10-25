@@ -28,5 +28,4 @@ class Solution{
             return new int[]{a, b};
         }
     }
-  
 }
