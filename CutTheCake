@@ -1,0 +1,43 @@
+private static void cakeCutter(String cake) {
+		int raisins = 0;
+		for (int i = 0; i < cake.length(); i++) {
+			if (cake.charAt(i) == 'o') {
+				raisins++;
+			}
+		}
+		String[] input = cake.split("\n");
+		int horizontal = input[0].length();
+		int vertical = input.length;
+		int cakeArea = horizontal * vertical;
+		int expectedPieceArea = cakeArea / raisins;
+ 		for (int i = 1; i <= vertical; i++) {
+			for (int j = 1; j <= horizontal; j++) {
+				if ((j * i) == expectedPieceArea) {
+					if (goodPiece(input, j, i)) {
+						for (int k = 0; k < i; k++) {
+							for (int k1 = 0; k1 < j; k1++) {
+								System.out.print(input[k].charAt(k1));
+							}
+							System.out.println();
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	private static boolean goodPiece(String[] input, int horizontalPiece, int verticalPiece) {
+		int raisins = 0;
+		for (int k = 0; k < verticalPiece; k++) {
+			for (int k1 = 0; k1 < horizontalPiece; k1++) {
+				if (input[k].charAt(k1) == 'o') {
+					raisins++;
+					if (raisins == 2) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
