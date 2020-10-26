@@ -1,0 +1,139 @@
+public class MathEvaluator {
+
+  public double calculate(String expression) {
+      expression = expression.replaceAll(" ", "");
+    for (int i = 0; i < expression.length(); i++) {
+      if (expression.charAt(i) == '(') {
+        int openBraket = i;
+        int closeBraket;
+        for (int j = i; j < expression.length(); j++) {
+          if (expression.charAt(j) == '(') {
+            openBraket = j + 1;
+          }
+          if (expression.charAt(j) == ')') {
+            closeBraket = j;
+            String numberBraket = calculateExpression(expression.substring(openBraket, closeBraket));
+            int lengthExpression = expression.length();
+            expression = expression.substring(0, openBraket-1) + numberBraket + expression.substring(closeBraket+1, lengthExpression);
+            break;
+          }
+        }
+        i--;
+      }
+    }
+    String numberBraket = calculateExpression(expression.substring(0, expression.length()));
+    
+    
+    return Double.parseDouble(numberBraket);
+  }
+
+  private static String calculateExpression(String expresion) {
+    String output;
+    if (expresion.length() == 2) {
+      return expresion;
+    }
+    String[] numbers = expresion.split("[^0-9.]+");
+    String[] operators = expresion.split("[0-9.]+");
+    double[] numberArray = getArrayOfNumbers(numbers, operators);
+    String[] operatorsArray = getArrayOfOperators(operators);
+    if (operatorsArray.length == 1) {
+      output = String.valueOf(getVolue(numberArray[0], numberArray[1], operatorsArray[0]));
+    }else {
+      output = getCalculationOfArrays(numberArray, operatorsArray);
+    }
+    return output;
+  }
+
+  private static String getCalculationOfArrays(double[] numberArray, String[] operatorsArray) {
+    double number;
+    int countOperations = operatorsArray.length;
+    while (0 < countOperations) {
+      
+      int index = 0;
+      if ((operatorsArray[0].equals("+") || operatorsArray[0].equals("-")) && 
+          (operatorsArray[1].equals("/") || operatorsArray[1].equals("*"))) {
+        index++;
+        number = getVolue(numberArray[index], numberArray[index+1], operatorsArray[index]);
+      }else {
+        number = getVolue(numberArray[index], numberArray[index+1], operatorsArray[index]);
+      }
+      
+      for (int j = 0, k = 0; j < countOperations; j++) {
+        if (j == index) {
+          numberArray[j] = number;
+          k++;
+          operatorsArray[j] = operatorsArray[j + k];
+          continue;
+        }else {
+          numberArray[j] = numberArray[j + k];
+          if (j == countOperations - 1) {
+            break;
+          }
+            operatorsArray[j] = operatorsArray[j + k];
+        }
+
+      }
+      countOperations--;
+    
+    }
+    return String.valueOf(numberArray[0]);
+  }
+
+  private static double getVolue(double first, double second, String operator) {
+    double output = 0;
+    switch (operator) {
+    case "/":
+      output = first / second;
+      break;
+    case "*":
+      output = first * second;
+      break;
+    case "-":
+      output = first - second;
+      break;
+    case "+":
+      output = first + second;
+      break;
+    }
+    return output;
+  }
+
+  private static String[] getArrayOfOperators(String[] operators) {
+    String[] arrayOfOperators = new String[operators.length-1];
+    for (int i = 0; i < arrayOfOperators.length; i++) {
+      while (operators[i+1].length() > 1) {
+          operators[i+1] = operators[i+1].substring(0, operators[i+1].length()-1);
+      }
+      arrayOfOperators[i] = operators[i+1];
+    }
+    return arrayOfOperators;
+  }
+
+  private static double[] getArrayOfNumbers(String[] numbers, String[] operators) {
+    double[] arrayOfNumbers;
+    if (numbers[0].equals("")) {
+      numbers[1] = "-" + numbers[1];
+      arrayOfNumbers = new double [numbers.length-1];
+      arrayOfNumbers[0] = Double.parseDouble(numbers[1]);
+      for (int i = 1; i < arrayOfNumbers.length; i++) {
+        if (operators[i].length() > 1) {
+          numbers[i+1] = operators[i].charAt(1) + numbers[i+1];
+        }
+        arrayOfNumbers[i] = Double.parseDouble(numbers[i+1]);
+      }
+    }else {
+      arrayOfNumbers = new double [numbers.length];
+      arrayOfNumbers[0] = Double.parseDouble(numbers[0]);
+      for (int i = 1; i < arrayOfNumbers.length; i++) {
+        if (operators[i].length() > 1) {
+          numbers[i] = operators[i].charAt(1) + numbers[i];
+        }
+      arrayOfNumbers[i] = Double.parseDouble(numbers[i]);
+      } 
+    }
+      
+    return arrayOfNumbers;
+  
+  }
+
+}
