@@ -1,0 +1,25 @@
+class Bud {
+    public static String buddy(long start, long limit) {
+        		for (long i = start; i <= limit; i++) {
+			long j = sum(i) - 1;
+			if (j <= i) {
+				continue;
+			}
+			if (sum(j) == (i + 1)) {
+				String output = "(" + i + " " + j + ")";
+				return output;
+			}	
+		}
+		return "Nothing";
+	}
+
+	private static long sum(long number) {
+		long sum = 0;
+		for (int i = 1; i <= number / 2; i++) {
+			if((number % i) == 0) {
+				sum += i;
+			}
+		}
+		return sum;
+    }
+}
