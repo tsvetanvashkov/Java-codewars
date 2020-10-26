@@ -1,0 +1,34 @@
+public class Snail {
+
+    public static int[] snail(int[][] array) {
+    String result = "";
+    int[] zero =  {};
+    if (array[0].length == 0) {
+      return zero;
+    }
+
+    while (array[array.length-1].length > 0) {
+      for (int i = 0; i < array[0].length; i++) {
+        result += array[0][i] + " ";
+      }
+      int[][] newArray = getNewArray(array);
+      array = newArray;
+    }
+    String[] resultArray = result.split(" ");
+    int[] output = new int[resultArray.length];
+    for (int i = 0; i < resultArray.length; i++) {
+      output[i] = Integer.parseInt(resultArray[i]);
+    }
+    return output;
+  }
+
+  private static int[][] getNewArray(int[][] array) {
+    int[][] newArray = new int[array[array.length-1].length][array.length-1];
+    for (int i = 0, old = array[array.length-1].length-1; i < newArray.length; i++, old--) {
+      for (int j = 0, old1 = 1; j < newArray[i].length; j++, old1++) {
+        newArray[i][j] = array[old1][old];
+      }
+    }
+    return newArray;
+   } 
+}
